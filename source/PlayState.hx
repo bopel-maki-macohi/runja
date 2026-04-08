@@ -18,6 +18,7 @@ class PlayState extends FlxState
 
 		_floor = new FlxSprite(0, FlxG.height / 2);
 		_floor.makeGraphic(FlxG.width, Math.round(_floor.y), FlxColor.GRAY);
+		_floor.maxVelocity.set(0,0);
 		add(_floor);
 
 		_player = new FlxSprite();
@@ -30,8 +31,6 @@ class PlayState extends FlxState
 		add(_player);
 	}
 
-	var player_accelValue = 100;
-
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -39,6 +38,11 @@ class PlayState extends FlxState
 		if (FlxG.keys.justReleased.SPACE)
 			_player.velocity.y = -_player.maxVelocity.y / 2;
 
-		FlxG.collide(_player, _floor);
+		FlxG.collide(_player, _floor, onFloor);
+	}
+
+	function onFloor(o1, o2)
+	{
+		_player.velocity.y = 0;
 	}
 }
