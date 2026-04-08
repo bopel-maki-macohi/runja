@@ -48,7 +48,7 @@ class PlayState extends FlxState
 	var playerJumpsMax:Int = 1;
 
 	var interactableSpawnTick:Int = 0;
-	var interactableResetSpawnTick:Int = 300;
+	var interactableResetSpawnTick:Int = 150;
 	var interactableSpawnCount:Int = 0;
 
 	override public function update(elapsed:Float)
@@ -67,7 +67,7 @@ class PlayState extends FlxState
 
 		if (interactableSpawnTick <= 0)
 		{
-			final collectable:Bool = FlxG.random.bool(25);
+			final collectable:Bool = FlxG.random.bool(45);
 
 			spawnInteractables(collectable);
 			interactableSpawnCount += 1;
@@ -93,7 +93,7 @@ class PlayState extends FlxState
 			if (object == null)
 				continue;
 
-			object.x -= object.width / 4;
+			object.x -= object.width / Math.max(1, 4 - (interactableSpawnCount / 50));
 
 			FlxG.overlap(_player, object, overlapMethod);
 		}
@@ -114,11 +114,11 @@ class PlayState extends FlxState
 
 		if (collectable)
 		{
-			interactableCount = FlxG.random.int(0, 6, [1, 3, 5]);
+			interactableCount = FlxG.random.int(2, 6, [3, 5]);
 		}
 		else
 		{
-			interactableCount = FlxG.random.int(1, 4, [1, 3]);
+			interactableCount = FlxG.random.int(2, 4, [3]);
 		}
 
 		if (interactableCount < 1)
