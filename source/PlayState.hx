@@ -35,10 +35,10 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
+		FlxG.collide(_player, _floor, onFloor);
+		
 		if (FlxG.keys.justReleased.SPACE)
 			_player.velocity.y = -_player.maxVelocity.y / 2;
-
-		FlxG.collide(_player, _floor, onFloor);
 	}
 
 	function onFloor(o1, o2)
