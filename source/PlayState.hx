@@ -18,7 +18,7 @@ class PlayState extends FlxState
 
 		_floor = new FlxSprite(0, FlxG.height / 2);
 		_floor.makeGraphic(FlxG.width, Math.round(_floor.y), FlxColor.GRAY);
-		_floor.maxVelocity.set(0,0);
+		_floor.immovable = true;
 		add(_floor);
 
 		_player = new FlxSprite();
