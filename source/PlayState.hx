@@ -24,7 +24,7 @@ class PlayState extends FlxState
 		_player = new FlxSprite();
 		_player.makeGraphic(32, 32, FlxColor.RED);
 
-		_player.maxVelocity.set(80, 400);
+		_player.maxVelocity.set(80, 800);
 		_player.drag.x = _player.maxVelocity.x * 4;
 
 		_player.acceleration.set(0, _player.maxVelocity.y);
