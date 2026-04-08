@@ -48,7 +48,8 @@ class PlayState extends FlxState
 	var playerJumpsMax:Int = 1;
 
 	var interactableSpawnTick:Int = 0;
-	var interactableResetSpawnTick:Int = 100;
+	var interactableResetSpawnTick:Int = 300;
+	var interactableSpawnCount:Int = 0;
 
 	override public function update(elapsed:Float)
 	{
@@ -69,12 +70,20 @@ class PlayState extends FlxState
 			final collectable:Bool = FlxG.random.bool(25);
 
 			spawnInteractables(collectable);
+			interactableSpawnCount += 1;
 
-			interactableSpawnTick = interactableResetSpawnTick;
+			interactableSpawnTick = FlxG.random.int(100, interactableResetSpawnTick);
+
+			if (interactableResetSpawnTick > 100)
+				interactableResetSpawnTick -= Math.round(2 * (interactableSpawnCount * (interactableSpawnTick / interactableResetSpawnTick)));
 		}
 
 		scroll(_collectables, interactCollectable);
 		scroll(_obstacles, interactObstacle);
+
+		FlxG.watch.addQuick('interactableResetSpawnTick', interactableResetSpawnTick);
+		FlxG.watch.addQuick('interactableSpawnCount', interactableSpawnCount);
+		FlxG.watch.addQuick('interactableSpawnTick', interactableSpawnTick);
 	}
 
 	function scroll(group:FlxSpriteGroup, overlapMethod:Null<(Dynamic, Dynamic) -> Void>)
