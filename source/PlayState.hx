@@ -100,10 +100,27 @@ class PlayState extends FlxState
 
 	function spawnInteractables(collectable:Bool)
 	{
-		var interactableCount:Int = FlxG.random.int(0, 6, [1, 3, 5]);
+		var interactableCount:Int = 0;
+		var floorInteractables = FlxG.random.bool() || _player.velocity.y < 10 && FlxG.random.bool(74);
+
 		var i = 0;
 
-		trace('Spawning ' + interactableCount + ((collectable) ? ' Collectable(s)' : ' Obstacle(s)'));
+		if (collectable)
+		{
+			interactableCount = FlxG.random.int(0, 6, [1, 3, 5]);
+		}
+		else
+		{
+			interactableCount = FlxG.random.int(1, 5, [2, 4]);
+		}
+
+		if (interactableCount < 1)
+			return;
+
+		trace('Spawning '
+			+ interactableCount
+			+ ((floorInteractables) ? ' Floor' : ' Sky')
+			+ ((collectable) ? ' Collectable(s)' : ' Obstacle(s)'));
 
 		while (interactableCount > 0)
 		{
@@ -111,7 +128,11 @@ class PlayState extends FlxState
 
 			interactable.screenCenter();
 			interactable.x = FlxG.width + (interactable.width * 2);
-			interactable.y -= interactable.height * 6;
+
+			if (floorInteractables)
+				interactable.y -= interactable.height * 2;
+			else
+				interactable.y -= interactable.height * 6;
 
 			interactable.x += i * interactable.width * 1.25;
 

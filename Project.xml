@@ -3,8 +3,9 @@
 	xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/xsd/project-1.0.4.xsd">
 
 	<!-- _________________________________ Custom _______________________________ -->
-
-	<!--Place custom nodes like icons here-->
+	
+	<window width="640" height="360" if="HALF_SIZE_SCREEN"/>
+	<window width="1280" height="720" unless="HALF_SIZE_SCREEN"/>
 
 	<!-- _________________________ Application Settings _________________________ -->
 
@@ -15,7 +16,8 @@
 
 	<!-- ____________________________ Window Settings ___________________________ -->
 
-	<window width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false" />
+	<window fps="60" background="#000000" hardware="true" vsync="false"/>
+	
 	<window if="html5" resizable="true" />
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
 	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" />
