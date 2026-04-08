@@ -111,7 +111,7 @@ class PlayState extends FlxState
 		}
 		else
 		{
-			interactableCount = FlxG.random.int(1, 5, [2, 4]);
+			interactableCount = FlxG.random.int(1, 4, [1, 3]);
 		}
 
 		if (interactableCount < 1)
@@ -130,7 +130,7 @@ class PlayState extends FlxState
 			interactable.x = FlxG.width + (interactable.width * 2);
 
 			if (floorInteractables)
-				interactable.y -= interactable.height * 2;
+				interactable.y -= interactable.height * 1;
 			else
 				interactable.y -= interactable.height * 6;
 
