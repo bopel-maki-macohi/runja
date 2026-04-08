@@ -48,6 +48,7 @@ class PlayState extends FlxState
 	var playerJumpsMax:Int = 1;
 
 	var interactableSpawnTick:Int = 0;
+	var interactableResetSpawnTick:Int = 100;
 
 	override public function update(elapsed:Float)
 	{
@@ -69,10 +70,7 @@ class PlayState extends FlxState
 
 			spawnInteractables(collectable);
 
-			if (collectable)
-				interactableSpawnTick = 100;
-			else
-				interactableSpawnTick = 75;
+			interactableSpawnTick = interactableResetSpawnTick;
 		}
 
 		scroll(_collectables, interactCollectable);
