@@ -11,6 +11,7 @@ import flixel.FlxState;
 class PlayState extends FlxState
 {
 	public var _collectables:FlxSpriteGroup;
+	public var _obstacles:FlxSpriteGroup;
 	public var _player:FlxSprite;
 	public var _floor:FlxSprite;
 
@@ -38,18 +39,21 @@ class PlayState extends FlxState
 
 		_collectables = new FlxSpriteGroup();
 		add(_collectables);
+
+		_obstacles = new FlxSpriteGroup();
+		add(_obstacles);
 	}
 
 	var playerJumps:Int = 0;
 	var playerJumpsMax:Int = 1;
 
-	var collectableSpawnTick:Int = 0;
+	var interactableSpawnTick:Int = 0;
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		collectableSpawnTick -= 1;
+		interactableSpawnTick -= 1;
 
 		FlxG.collide(_player, _floor, onFloor);
 
@@ -59,21 +63,32 @@ class PlayState extends FlxState
 			playerJumps++;
 		}
 
-		if (collectableSpawnTick <= 0)
+		if (interactableSpawnTick <= 0)
 		{
-			spawnCollectable();
+			final collectable:Bool = FlxG.random.bool(25);
 
-			collectableSpawnTick = 100;
+			spawnInteractables(collectable);
+
+			if (collectable)
+				interactableSpawnTick = 100;
+			else
+				interactableSpawnTick = 75;
 		}
 
-		for (collectable in _collectables)
+		scroll(_collectables, interactCollectable);
+		scroll(_obstacles, interactObstacle);
+	}
+
+	function scroll(group:FlxSpriteGroup, overlapMethod:Null<(Dynamic, Dynamic) -> Void>)
+	{
+		for (object in group)
 		{
-			if (collectable == null)
+			if (object == null)
 				continue;
 
-			collectable.x -= collectable.width / 4;
+			object.x -= object.width / 4;
 
-			FlxG.overlap(_player, collectable, collectCollectable);
+			FlxG.overlap(_player, object, overlapMethod);
 		}
 	}
 
@@ -83,24 +98,29 @@ class PlayState extends FlxState
 		playerJumps = 0;
 	}
 
-	function spawnCollectable()
+	function spawnInteractables(collectable:Bool)
 	{
-		var collectableCount:Int = FlxG.random.int(0, 6, [1, 3, 5]);
+		var interactableCount:Int = FlxG.random.int(0, 6, [1, 3, 5]);
 		var i = 0;
 
-		while (collectableCount > 0)
+		trace('Spawning ' + interactableCount + ((collectable) ? ' Collectable(s)' : ' Obstacle(s)'));
+
+		while (interactableCount > 0)
 		{
-			var newCollectable:FlxSprite = makeCollectable();
+			var interactable:FlxSprite = (collectable) ? makeCollectable() : makeObstacle();
 
-			newCollectable.screenCenter();
-			newCollectable.x = FlxG.width + newCollectable.width;
-			newCollectable.y -= newCollectable.height * 6;
+			interactable.screenCenter();
+			interactable.x = FlxG.width + (interactable.width * 2);
+			interactable.y -= interactable.height * 6;
 
-			newCollectable.x += i * newCollectable.width * 1.25;
+			interactable.x += i * interactable.width * 1.25;
 
-			_collectables.add(newCollectable);
+			if (collectable)
+				_collectables.add(interactable);
+			else
+				_obstacles.add(interactable);
 
-			collectableCount -= 1;
+			interactableCount -= 1;
 			i += 1;
 		}
 	}
@@ -110,9 +130,22 @@ class PlayState extends FlxState
 		return new FlxSprite().makeGraphic(16, 16, FlxColor.YELLOW);
 	}
 
-	function collectCollectable(player:FlxSprite, collectable:FlxSprite)
+	function makeObstacle():FlxSprite
+	{
+		return new FlxSprite().makeGraphic(16, 16, FlxColor.GRAY);
+	}
+
+	function interactCollectable(player:FlxSprite, collectable:FlxSprite)
 	{
 		_collectables.remove(collectable);
 		collectable.destroy();
+	}
+
+	function interactObstacle(player:FlxSprite, obstacle:FlxSprite)
+	{
+		_obstacles.remove(obstacle);
+		obstacle.destroy();
+
+		trace('YOU DEAD');
 	}
 }
